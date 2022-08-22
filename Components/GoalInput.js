@@ -1,13 +1,10 @@
-import { View, TextInput, Button, StyleSheet, Modal } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Modal, Image } from 'react-native';
 import React, { useState } from 'react';
-import GoalList from './GoalList';
 
 const GoalInput = ({
   addGoalHandler,
   isModalVisible,
   setModalVisibilityState,
-  goals,
-  showConfirmDialog,
 }) => {
   const [inputGoals, setInputGoals] = useState();
 
@@ -16,12 +13,13 @@ const GoalInput = ({
   };
 
   const onPressHandler = () => {
-    addGoalHandler(inputGoals);
+    addGoalHandler(inputGoals, setInputGoals);
   };
 
   return (
     <Modal visible={isModalVisible} animationType="slide">
       <View style={styles.inputContainer}>
+      <Image style={styles.images} source={require('../assets/images/goal.png')} />
         <TextInput
           style={styles.textInput}
           placeholder="Enter your goal!"
@@ -30,34 +28,43 @@ const GoalInput = ({
         />
         <View style={styles.btnContainer}>
           <View style={styles.btn}>
-            <Button title="Add your goal" onPress={onPressHandler} />
-          </View>
           <Button
             title="Cancel"
             onPress={() => setModalVisibilityState(false)}
+            color="#f31282"
           />
+          </View>
+          <View style={styles.btn}>
+            <Button title="Add your goal" onPress={onPressHandler} color="#5e0acc"/>
+          </View>
         </View>
       </View>
-      <GoalList goals={goals} showConfirmDialog={showConfirmDialog} />
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  images: {
+    width: 100,
+    height: 100,
+    margin: 20
+  },
   inputContainer: {
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 24,
-    borderBottomWidth: 2,
-    borderBottomColor: '#cccccc',
-    marginBottom: 24,
+    padding: 16,
+    backgroundColor: '#311b6b'
   },
   textInput: {
     borderWidth: 1,
-    borderColor: '#cccccc',
-    padding: 8,
-    marginRight: 8,
-    width: '70%',
+    borderColor: '#e4d0ff',
+    backgroundColor: '#e4d0ff',
+    color: '#120438',
+    borderRadius: 6,
+    padding: 16,
+    margin: 8,
+    width: '100%',
   },
   btnContainer: {
     marginTop: 20,
@@ -67,6 +74,11 @@ const styles = StyleSheet.create({
     width: '40%',
     marginHorizontal: 10,
   },
+  goalList: {
+    padding: 20,
+    height: 300,
+    width: '100%',
+  }
 });
 
 export default GoalInput;

@@ -10,16 +10,19 @@ import {
 import React, { useState } from 'react';
 import GoalItem from './Components/GoalItem';
 import GoalInput from './Components/GoalInput';
+import GoalList from './Components/GoalList';
+import { StatusBar } from 'expo-status-bar';
 
 export default function () {
   const [goals, setGoals] = useState([]);
   const [modalVisibilityState, setModalVisibilityState] = useState(false);
 
-  const addGoalHandler = (inputGoals) => {
+  const addGoalHandler = (inputGoals, setInputGoals) => {
     setGoals((currentGoal) => [
       ...currentGoal,
       { key: goals.length + 1, text: inputGoals },
     ]);
+    setInputGoals('');
   };
 
   const showConfirmDialog = (id) => {
@@ -49,33 +52,37 @@ export default function () {
   };
 
   return (
+    <>
+    <StatusBar style='light' />
     <View style={styles.appContainer}>
       <View styles={styles.addNewGoal}>
-      <Button
-        title="Add New Goal"
-        color="#5e0acc"
-        onPress={() => setModalVisibilityState(true)}
-      />
+        <Button
+          title="Add New Goal"
+          color="#5e0acc"
+          onPress={() => setModalVisibilityState(true)}
+        />
       </View>
       <GoalInput
         addGoalHandler={addGoalHandler}
         isModalVisible={modalVisibilityState}
         setModalVisibilityState={setModalVisibilityState}
-        goals={goals}
-        showConfirmDialog={showConfirmDialog}
       />
+      <GoalList goals={goals} showConfirmDialog={showConfirmDialog} />
     </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   addNewGoal: {
-    paddingTop: 20,
+    padding: 20,
   },
   appContainer: {
+    flex: 1,
     paddingTop: 50,
     paddingHorizontal: 16,
-    width: '90%',
+    width: '100%',
+    backgroundColor: '#1e085a'
   },
   goalText: {
     color: '#cccccc',
