@@ -1,39 +1,61 @@
-import { View, Text, TextInput, StyleSheet, Button, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Button,
+  FlatList,
+  Alert,
+} from 'react-native';
+import React, { useState } from 'react';
+import GoalItem from './Components/GoalItem';
+import GoalInput from './Components/GoalInput';
 
 export default function () {
-  const [inputGoals, setInputGoals] = useState()
-  const [goals, setGoals] = useState([])
+  const [goals, setGoals] = useState([]);
 
-  const goalInputHandler = (enteredGoal) => {
-    setInputGoals(enteredGoal);
-  }
+  const addGoalHandler = (inputGoals) => {
+    setGoals((currentGoal) => [
+      ...currentGoal,
+      { key: goals.length + 1, text: inputGoals },
+    ]);
+  };
 
-  const addGoalHandler = () => {
-    setGoals(currentGoal => [...currentGoal, { id: goals.length + 1, goal: inputGoals}]);
+  const showConfirmDialog = (id) => {
+    return Alert.alert(
+      "Are you sure?",
+      "Are you sure you want to remove this goal?",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            onDeleteHandler(id)
+          },
+        },
+        {
+          text: "No",
+        },
+      ]
+    );
+  };
+
+  const onDeleteHandler = (id) => {
+    console.log('DELETE');
+    let goalsCopy = [...goals];
+    goalsCopy = goalsCopy.filter((goals) => goals.key.toString() !== id.toString())
+    setGoals(goalsCopy);
   }
-  console.log(goals);
 
   return (
     <View style={styles.appContainer}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter your goal!"
-          onChangeText={goalInputHandler}
+      <GoalInput addGoalHandler={addGoalHandler} />
+      <View>
+        <FlatList
+          data={goals}
+          renderItem={(itemData) => {
+            return <GoalItem itemData={itemData} deleteItem={showConfirmDialog}/>;
+          }}
         />
-        <Button title="Add your goal" onPress={addGoalHandler} />
-      </View>
-      <View style={styles.goalContainer}>
-        <ScrollView>
-          {goals.map((goal) => (
-            <View key={goal.id}>
-              <Text style={styles.goalItem}>
-                {goal.goal}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
       </View>
     </View>
   );
@@ -43,35 +65,12 @@ const styles = StyleSheet.create({
   appContainer: {
     paddingTop: 50,
     paddingHorizontal: 16,
-    width: '90%'
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: 24,
-    borderBottomWidth: 2,
-    borderBottomColor: '#cccccc',
-    marginBottom: 24
-  },
-  textInput:{
-    borderWidth: 1,
-    borderColor: '#cccccc',
-    padding: 8,
-    marginRight: 8,
-    width: '70%'
-  },
-  goalItem: {
-    margin: 8,
-    padding: 8,
-    borderRadius: 6,
-    backgroundColor: '#5e0acc',
-    color: '#cccccc'
+    width: '90%',
   },
   goalText: {
-    color: '#cccccc'
+    color: '#cccccc',
   },
   deleteButton: {
-    marginLeft: 50
-  }
-})
+    marginLeft: 50,
+  },
+});
