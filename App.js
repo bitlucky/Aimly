@@ -13,6 +13,7 @@ import GoalInput from './Components/GoalInput';
 
 export default function () {
   const [goals, setGoals] = useState([]);
+  const [modalVisibilityState, setModalVisibilityState] = useState(false);
 
   const addGoalHandler = (inputGoals) => {
     setGoals((currentGoal) => [
@@ -23,45 +24,54 @@ export default function () {
 
   const showConfirmDialog = (id) => {
     return Alert.alert(
-      "Are you sure?",
-      "Are you sure you want to remove this goal?",
+      'Are you sure?',
+      'Are you sure you want to remove this goal?',
       [
         {
-          text: "Yes",
+          text: 'Yes',
           onPress: () => {
-            onDeleteHandler(id)
+            onDeleteHandler(id);
           },
         },
         {
-          text: "No",
+          text: 'No',
         },
       ]
     );
   };
 
   const onDeleteHandler = (id) => {
-    console.log('DELETE');
     let goalsCopy = [...goals];
-    goalsCopy = goalsCopy.filter((goals) => goals.key.toString() !== id.toString())
+    goalsCopy = goalsCopy.filter(
+      (goals) => goals.key.toString() !== id.toString()
+    );
     setGoals(goalsCopy);
-  }
+  };
 
   return (
     <View style={styles.appContainer}>
-      <GoalInput addGoalHandler={addGoalHandler} />
-      <View>
-        <FlatList
-          data={goals}
-          renderItem={(itemData) => {
-            return <GoalItem itemData={itemData} deleteItem={showConfirmDialog}/>;
-          }}
-        />
+      <View styles={styles.addNewGoal}>
+      <Button
+        title="Add New Goal"
+        color="#5e0acc"
+        onPress={() => setModalVisibilityState(true)}
+      />
       </View>
+      <GoalInput
+        addGoalHandler={addGoalHandler}
+        isModalVisible={modalVisibilityState}
+        setModalVisibilityState={setModalVisibilityState}
+        goals={goals}
+        showConfirmDialog={showConfirmDialog}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  addNewGoal: {
+    paddingTop: 20,
+  },
   appContainer: {
     paddingTop: 50,
     paddingHorizontal: 16,
