@@ -1,93 +1,30 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Button,
-  FlatList,
-  Alert,
-} from 'react-native';
-import React, { useState } from 'react';
-import GoalItem from './Components/GoalItem';
-import GoalInput from './Components/GoalInput';
-import GoalList from './Components/GoalList';
-import { StatusBar } from 'expo-status-bar';
+import { View, Text, StyleSheet } from 'react-native'
+import React from 'react'
+import StartGameScreen from './screens/StartGameScreen'
 
-export default function () {
-  const [goals, setGoals] = useState([]);
-  const [modalVisibilityState, setModalVisibilityState] = useState(false);
-
-  const addGoalHandler = (inputGoals, setInputGoals) => {
-    setGoals((currentGoal) => [
-      ...currentGoal,
-      { key: goals.length + 1, text: inputGoals },
-    ]);
-    setInputGoals('');
-  };
-
-  const showConfirmDialog = (id) => {
-    return Alert.alert(
-      'Are you sure?',
-      'Are you sure you want to remove this goal?',
-      [
-        {
-          text: 'Yes',
-          onPress: () => {
-            onDeleteHandler(id);
-          },
-        },
-        {
-          text: 'No',
-        },
-      ]
-    );
-  };
-
-  const onDeleteHandler = (id) => {
-    let goalsCopy = [...goals];
-    goalsCopy = goalsCopy.filter(
-      (goals) => goals.key.toString() !== id.toString()
-    );
-    setGoals(goalsCopy);
-  };
-
+const App = () => {
   return (
-    <>
-    <StatusBar style='light' />
-    <View style={styles.appContainer}>
-      <View styles={styles.addNewGoal}>
-        <Button
-          title="Add New Goal"
-          color="#5e0acc"
-          onPress={() => setModalVisibilityState(true)}
-        />
-      </View>
-      <GoalInput
-        addGoalHandler={addGoalHandler}
-        isModalVisible={modalVisibilityState}
-        setModalVisibilityState={setModalVisibilityState}
-      />
-      <GoalList goals={goals} showConfirmDialog={showConfirmDialog} />
+    <View style={styles.container}>
+      <StartGameScreen/>
     </View>
-    </>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  addNewGoal: {
-    padding: 20,
-  },
-  appContainer: {
-    flex: 1,
-    paddingTop: 50,
-    paddingHorizontal: 16,
-    width: '100%',
-    backgroundColor: '#1e085a'
-  },
-  goalText: {
-    color: '#cccccc',
-  },
-  deleteButton: {
-    marginLeft: 50,
-  },
-});
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100,
+    padding: 16,
+    backgroundColor: '#4e0329',
+    marginHorizontal: 24,
+    borderRadius: 8,
+    elevation: 8,
+    shadowColor: 'white',
+    shadowOffset: { width: 0, height: 2},
+    shadowRadius: 16,
+    shadowOpacity: 0.25
+  }
+})
+
+export default App
